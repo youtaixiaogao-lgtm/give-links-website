@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>株式会社Give Links</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F9F5EF;
+      --warm-white: #FDFAF6;
+      --ink: #1A1714;
+      --gold: #C9A96E;
+      --gold-light: #E8D5B0;
+      --muted: #8A8178;
+      --accent: #C9A96E;
+      --section-gap: 12rem;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: var(--warm-white);
+      color: var(--ink);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      background: var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease;
+      mix-blend-mode: multiply;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: all 0.18s ease;
+      opacity: 0.6;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      mix-blend-mode: normal;
+    }
+    nav::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(253,250,246,0.9), transparent);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      z-index: -1;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+    .nav-logo span { color: var(--gold); font-style: italic; }
+    .nav-links {
+      display: flex;
+      gap: 3rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+    .nav-links a:hover { opacity: 1; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 10rem 4rem 6rem 6rem;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-tag {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 300;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 1s 0.3s forwards;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 6vw, 6rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      opacity: 0;
+      animation: fadeUp 1s 0.5s forwards;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .hero-title .sub {
+      font-size: clamp(1.2rem, 2vw, 1.8rem);
+      font-weight: 300;
+      color: var(--muted);
+      display: block;
+      margin-top: 0.5rem;
+      font-style: normal;
+      letter-spacing: 0.2em;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .hero-desc {
+      margin-top: 3rem;
+      font-size: 0.95rem;
+      line-height: 2;
+      color: var(--muted);
+      max-width: 420px;
+      opacity: 0;
+      animation: fadeUp 1s 0.7s forwards;
+    }
+    .hero-cta {
+      margin-top: 3.5rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      opacity: 0;
+      animation: fadeUp 1s 0.9s forwards;
+    }
+    .btn-primary {
+      padding: 1rem 2.5rem;
+      background: var(--ink);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: none;
+      transition: all 0.35s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      transform: translateX(-101%);
+      transition: transform 0.35s ease;
+    }
+    .btn-primary:hover::after { transform: translateX(0); }
+    .btn-primary span { position: relative; z-index: 1; }
+    .btn-link {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: var(--ink);
+      text-decoration: none;
+      opacity: 0.6;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: opacity 0.3s;
+    }
+    .btn-link:hover { opacity: 1; }
+    .btn-link::after { content: '→'; }
+
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 80% at 70% 50%, rgba(201,169,110,0.12) 0%, transparent 70%),
+        linear-gradient(135deg, var(--cream) 0%, #EDE8DF 100%);
+    }
+    .hero-lines {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .hero-lines::before {
+      content: '';
+      position: absolute;
+      width: 1px;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent, var(--gold-light), transparent);
+      left: 30%;
+      animation: lineFloat 6s ease-in-out infinite;
+    }
+    .hero-lines::after {
+      content: '';
+      position: absolute;
+      width: 1px;
+      height: 60%;
+      background: linear-gradient(to bottom, transparent, var(--gold-light), transparent);
+      left: 60%;
+      top: 20%;
+      animation: lineFloat 8s ease-in-out infinite reverse;
+    }
+    .hero-ornament {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      height: 300px;
+      border: 1px solid rgba(201,169,110,0.2);
+      border-radius: 50%;
+      animation: rotateOrbit 20s linear infinite;
+    }
+    .hero-ornament::before {
+      content: '';
+      position: absolute;
+      top: -3px; left: 50%;
+      width: 6px; height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      transform: translateX(-50%);
+    }
+    .hero-ornament-inner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 180px;
+      height: 180px;
+      border: 1px solid rgba(201,169,110,0.15);
+      border-radius: 50%;
+      animation: rotateOrbit 15s linear infinite reverse;
+    }
+    .hero-tagline {
+      position: absolute;
+      bottom: 4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      white-space: nowrap;
+    }
+    .hero-tagline p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 2rem;
+      left: 6rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      opacity: 0;
+      animation: fadeUp 1s 1.2s forwards;
+    }
+    .hero-scroll span {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      writing-mode: vertical-lr;
+    }
+    .hero-scroll-line {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* DIVIDER */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      padding: 0 6rem;
+      margin: var(--section-gap) 0 0;
+    }
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold-light));
+    }
+    .divider-line.rev {
+      background: linear-gradient(to left, transparent, var(--gold-light));
+    }
+    .divider-dot {
+      width: 5px; height: 5px;
+      background: var(--gold);
+      border-radius: 50%;
+    }
+
+    /* SECTIONS */
+    section { padding: 0 6rem; }
+
+    .section-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 300;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 4vw, 4rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--ink);
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+
+    /* VISION / MISSION */
+    .vm-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 5rem;
+    }
+    .vm-card {
+      padding: 4rem;
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s;
+    }
+    .vm-card:hover { background: var(--ink); }
+    .vm-card:hover .vm-label { color: var(--gold); }
+    .vm-card:hover .vm-text { color: rgba(255,255,255,0.8); }
+    .vm-card:hover .vm-word { color: rgba(255,255,255,0.05); }
+    .vm-word {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 8rem;
+      font-weight: 300;
+      color: rgba(0,0,0,0.04);
+      position: absolute;
+      bottom: -1rem;
+      right: 1rem;
+      line-height: 1;
+      transition: color 0.4s;
+      pointer-events: none;
+      user-select: none;
+    }
+    .vm-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      transition: color 0.4s;
+    }
+    .vm-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--ink);
+      transition: color 0.4s;
+    }
+
+    /* VALUES */
+    .values-intro {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 6rem;
+      margin-top: 5rem;
+      align-items: start;
+    }
+    .values-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 0;
+      grid-column: 1 / -1;
+    }
+    .value-item {
+      display: grid;
+      grid-template-columns: 80px 1fr 1fr;
+      align-items: center;
+      gap: 3rem;
+      padding: 2.5rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      transition: all 0.3s;
+      position: relative;
+    }
+    .value-item::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: -1px;
+      height: 1px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .value-item:hover::after { transform: scaleX(1); }
+    .value-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--gold-light);
+      line-height: 1;
+    }
+    .value-name-en {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--ink);
+      font-style: italic;
+    }
+    .value-name-ja {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-top: 0.3rem;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .value-desc {
+      font-size: 0.85rem;
+      line-height: 1.9;
+      color: var(--muted);
+    }
+
+    /* BUSINESS */
+    .business {
+      margin-top: var(--section-gap);
+      background: var(--ink);
+      padding: 8rem 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .business::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 50%;
+      height: 100%;
+      background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(201,169,110,0.08) 0%, transparent 70%);
+    }
+    .business .section-label { color: var(--gold); opacity: 0.8; }
+    .business .section-title { color: var(--cream); }
+    .business-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 5rem;
+    }
+    .business-card {
+      background: rgba(255,255,255,0.04);
+      padding: 4rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.35s;
+    }
+    .business-card:hover { background: rgba(201,169,110,0.1); }
+    .business-icon {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      display: block;
+    }
+    .business-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--cream);
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+    .business-title-ja {
+      font-size: 0.85rem;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .business-desc {
+      font-size: 0.85rem;
+      line-height: 2;
+      color: rgba(255,255,255,0.5);
+    }
+    .business-num {
+      position: absolute;
+      bottom: 2rem;
+      right: 2.5rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 6rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.04);
+      line-height: 1;
+    }
+
+    /* CONTACT */
+    .contact-section {
+      margin-top: var(--section-gap);
+      padding-bottom: var(--section-gap);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+    .contact-section .section-title { font-size: clamp(2rem, 3.5vw, 3.5rem); }
+    .contact-desc {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      line-height: 2;
+      color: var(--muted);
+    }
+    .contact-form { display: flex; flex-direction: column; gap: 1.5rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .form-input, .form-textarea {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(0,0,0,0.15);
+      padding: 0.75rem 0;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 0.9rem;
+      color: var(--ink);
+      transition: border-color 0.3s;
+      outline: none;
+      cursor: none;
+    }
+    .form-input:focus, .form-textarea:focus { border-bottom-color: var(--gold); }
+    .form-textarea { resize: none; height: 100px; }
+    .form-submit {
+      margin-top: 1rem;
+      padding: 1rem 3rem;
+      background: var(--ink);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border: none;
+      cursor: none;
+      align-self: flex-start;
+      transition: all 0.35s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .form-submit::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      transform: translateX(-101%);
+      transition: transform 0.35s ease;
+    }
+    .form-submit:hover::after { transform: translateX(0); }
+    .form-submit span { position: relative; z-index: 1; }
+
+    /* FOOTER */
+    footer {
+      background: var(--ink);
+      padding: 5rem 6rem 3rem;
+      color: rgba(255,255,255,0.5);
+    }
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: var(--cream);
+      letter-spacing: 0.05em;
+    }
+    .footer-logo span { color: var(--gold); font-style: italic; }
+    .footer-tagline {
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.05em;
+    }
+    .footer-nav {
+      display: flex;
+      gap: 5rem;
+    }
+    .footer-col h4 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; }
+    .footer-col a {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      transition: color 0.3s;
+      letter-spacing: 0.05em;
+    }
+    .footer-col a:hover { color: var(--gold); }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 2rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes lineFloat {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.8) translateY(0); }
+      50% { opacity: 0.8; transform: scaleY(1.1) translateY(-20px); }
+    }
+    @keyframes rotateOrbit {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { transform: scaleY(1); opacity: 1; }
+      50% { transform: scaleY(0.6); opacity: 0.4; }
+    }
+
+    /* REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 900px) {
+      nav { padding: 1.5rem 2rem; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 10rem 2rem 4rem; }
+      .hero-scroll { left: 2rem; }
+      section { padding: 0 2rem; }
+      .divider { padding: 0 2rem; }
+      .vm-grid, .business-grid, .contact-section { grid-template-columns: 1fr; }
+      .value-item { grid-template-columns: 60px 1fr; }
+      .value-item .value-desc { grid-column: 2; }
+      .business { padding: 5rem 2rem; }
+      footer { padding: 4rem 2rem 2rem; }
+      .footer-top { flex-direction: column; gap: 3rem; }
+      .footer-nav { flex-direction: column; gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">Give <span>Links</span></a>
+    <ul class="nav-links">
+      <li><a href="#vision">Vision</a></li>
+      <li><a href="#values">Values</a></li>
+      <li><a href="#business">事業</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" style="padding:0;">
+    <div class="hero-left">
+      <p class="hero-tag">株式会社 Give Links</p>
+      <h1 class="hero-title">
+        <em>Give</em> Links<br/>
+        <span class="sub">Connecting People &amp; Possibilities</span>
+      </h1>
+      <p class="hero-desc">
+        人と人、才能と機会をつなぎ<br/>
+        世界に新しい可能性を生み出す。
+      </p>
+      <div class="hero-cta">
+        <a href="#business" class="btn-primary"><span>事業を見る</span></a>
+        <a href="#contact" class="btn-link">お問い合わせ</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-bg"></div>
+      <div class="hero-lines"></div>
+      <div class="hero-ornament"></div>
+      <div class="hero-ornament-inner"></div>
+      <div class="hero-tagline">
+        <p>Connect · Create · Challenge</p>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- DIVIDER -->
+  <div class="divider" style="margin-top: 8rem;">
+    <div class="divider-line"></div>
+    <div class="divider-dot"></div>
+    <div class="divider-line rev"></div>
+  </div>
+
+  <!-- VISION / MISSION -->
+  <section id="vision" style="margin-top: 5rem;">
+    <p class="section-label reveal">Our Purpose</p>
+    <h2 class="section-title reveal">Vision &amp; <em>Mission</em></h2>
+    <div class="vm-grid reveal">
+      <div class="vm-card">
+        <div class="vm-word">Vision</div>
+        <p class="vm-label">Vision — ビジョン</p>
+        <p class="vm-text">
+          人と人、才能と機会をつなぎ、<br/>
+          世界に新しい可能性を生み出す。
+        </p>
+      </div>
+      <div class="vm-card">
+        <div class="vm-word">Mission</div>
+        <p class="vm-label">Mission — ミッション</p>
+        <p class="vm-text">
+          価値ある出会い・コミュニティ・サービスを通じて<br/>
+          人の人生を前に進める「きっかけ」を<br/>作り続ける。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIVIDER -->
+  <div class="divider" style="margin-top: var(--section-gap);">
+    <div class="divider-line"></div>
+    <div class="divider-dot"></div>
+    <div class="divider-line rev"></div>
+  </div>
+
+  <!-- VALUES -->
+  <section id="values" style="margin-top: 5rem;">
+    <p class="section-label reveal">What We Stand For</p>
+    <h2 class="section-title reveal">Our <em>Values</em></h2>
+    <div class="values-list">
+      <div class="value-item reveal">
+        <span class="value-num">01</span>
+        <div>
+          <div class="value-name-en">Connect</div>
+          <div class="value-name-ja">つなげる</div>
+        </div>
+        <p class="value-desc">人、文化、アイデアをつなげることで<br/>新しい価値を生み出す。</p>
+      </div>
+      <div class="value-item reveal" style="transition-delay:0.1s">
+        <span class="value-num">02</span>
+        <div>
+          <div class="value-name-en">Create Opportunity</div>
+          <div class="value-name-ja">機会をつくる</div>
+        </div>
+        <p class="value-desc">挑戦できる環境や出会いをつくり<br/>可能性を広げる。</p>
+      </div>
+      <div class="value-item reveal" style="transition-delay:0.2s">
+        <span class="value-num">03</span>
+        <div>
+          <div class="value-name-en">Be Authentic</div>
+          <div class="value-name-ja">自分らしく</div>
+        </div>
+        <p class="value-desc">個性や価値観を尊重し<br/>本来の魅力が輝く場を作る。</p>
+      </div>
+      <div class="value-item reveal" style="transition-delay:0.3s">
+        <span class="value-num">04</span>
+        <div>
+          <div class="value-name-en">Global Mind</div>
+          <div class="value-name-ja">世界とつながる</div>
+        </div>
+        <p class="value-desc">国籍や文化を越え<br/>世界に開かれたコミュニティを作る。</p>
+      </div>
+      <div class="value-item reveal" style="transition-delay:0.4s">
+        <span class="value-num">05</span>
+        <div>
+          <div class="value-name-en">Challenge</div>
+          <div class="value-name-ja">挑戦する</div>
+        </div>
+        <p class="value-desc">新しいアイデアと行動で<br/>常に進化し続ける。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUSINESS -->
+  <div id="business" style="margin-top: var(--section-gap);">
+    <div class="business">
+      <p class="section-label reveal">What We Do</p>
+      <h2 class="section-title reveal">Our <em>Business</em></h2>
+      <div class="business-grid">
+        <div class="business-card reveal">
+          <span class="business-icon">🎉</span>
+          <div class="business-title-ja">イベント事業</div>
+          <h3 class="business-title">Event Business</h3>
+          <p class="business-desc">
+            人と人をつなぐ特別な場を創出します。<br/>
+            交流・学び・体験を通じて<br/>
+            参加者の人生に新たな「きっかけ」を届けます。
+          </p>
+          <span class="business-num">01</span>
+        </div>
+        <div class="business-card reveal" style="transition-delay:0.15s">
+          <span class="business-icon">💅</span>
+          <div class="business-title-ja">ネイルサロン事業</div>
+          <h3 class="business-title">Nail Salon Business</h3>
+          <p class="business-desc">
+            あなたらしさを表現する空間を提供します。<br/>
+            技術と美学を融合させ<br/>
+            本来の魅力が輝くひとときをお届けします。
+          </p>
+          <span class="business-num">02</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-section">
+      <div class="reveal">
+        <p class="section-label">Get In Touch</p>
+        <h2 class="section-title">お問い<em>合わせ</em></h2>
+        <p class="contact-desc">
+          ご質問・ご依頼・コラボレーションのご提案など<br/>
+          お気軽にお問い合わせください。<br/>
+          新しいつながりをお待ちしております。
+        </p>
+      </div>
+      <div class="contact-form reveal" style="transition-delay:0.2s">
+        <div class="form-group">
+          <label class="form-label">お名前</label>
+          <input type="text" class="form-input" placeholder="山田 太郎" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">メールアドレス</label>
+          <input type="email" class="form-input" placeholder="example@email.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">件名</label>
+          <input type="text" class="form-input" placeholder="お問い合わせ内容" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">メッセージ</label>
+          <textarea class="form-textarea" placeholder="ご自由にお書きください..."></textarea>
+        </div>
+        <button class="form-submit"><span>送信する</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">Give <span>Links</span></div>
+        <p class="footer-tagline">株式会社 Give Links</p>
+      </div>
+      <nav class="footer-nav">
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#vision">Vision &amp; Mission</a></li>
+            <li><a href="#values">Values</a></li>
+            <li><a href="#business">事業内容</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Business</h4>
+          <ul>
+            <li><a href="#business">イベント事業</a></li>
+            <li><a href="#business">ネイルサロン事業</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="#contact">お問い合わせ</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 株式会社Give Links. All rights reserved.</span>
+      <span style="font-style:italic; font-family:'Cormorant Garamond',serif; color:rgba(201,169,110,0.5);">Connect · Create · Challenge</span>
+    </div>
+  </footer>
+
+  <script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    function animCursor() {
+      cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(animCursor);
+    }
+    animCursor();
+    document.querySelectorAll('a,button,.vm-card,.business-card,.value-item').forEach(el => {
+      el.addEventListener('mouseenter', () => { ring.style.transform = 'translate(-50%,-50%) scale(1.8)'; ring.style.borderColor = 'var(--gold)'; });
+      el.addEventListener('mouseleave', () => { ring.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.borderColor = 'var(--gold)'; });
+    });
+
+    // Reveal on scroll
+    const reveals = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.15 });
+    reveals.forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>
